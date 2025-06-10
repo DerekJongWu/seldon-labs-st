@@ -240,6 +240,7 @@ if st.button("Process"):
         results_df.to_excel(writer, sheet_name='Game Results')
 
     df = pd.read_excel('output.xlsx', sheet_name = 'Game Results')
+
     col1 = 'actionsPlayer1'
     col2 = 'actionsPlayer2'
 
@@ -269,5 +270,10 @@ if st.button("Process"):
     plt.tight_layout()
     st.pyplot(plt)
 
+st.download_button(
+    label="Download Excel",
+    data= 'output.xlsx',
+    file_name='output.xlsx',
+)
 
 
