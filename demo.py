@@ -6,6 +6,7 @@ import numpy as np
 from tqdm import tqdm
 import time
 import matplotlib.pyplot as plt
+import io
 
 class Player(): 
     def __init__(self, data, player_name):
@@ -270,10 +271,22 @@ if st.button("Process"):
     plt.tight_layout()
     st.pyplot(plt)
 
+output = io.BytesIO()
+with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+    tt_df.to_excel(writer, sheet_name='Defect Defect')
+    tnt_df.to_excel(writer, sheet_name='Defect Cooperate')
+    ntt_df.to_excel(writer, sheet_name='Cooperate Defect')
+    ntnt_df.to_excel(writer, sheet_name='Cooperate Cooperate')
+    results_df.to_excel(writer, sheet_name='Game Results')
+    writer.save() 
+excel_data = output.getvalue()
+
+
 st.download_button(
-    label="Download Excel",
-    data= 'output.xlsx',
-    file_name='output.xlsx',
+    label="📥 Download Excel file",
+    data=excel_data,
+    file_name="dataframe.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
 
