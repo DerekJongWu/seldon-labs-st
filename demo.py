@@ -166,6 +166,7 @@ if st.session_state.get("modal_open", False):
         update_values(scenario, player, new_means, new_stds)
         st.session_state.modal_open = False
 
+output = io.BytesIO()
 # Input for number of simulations and process button
 num_simulations = st.number_input("Number of simulations", min_value=1, value=100, step=1)
 if st.button("Process"):
@@ -240,6 +241,13 @@ if st.button("Process"):
         ntnt_df.to_excel(writer, sheet_name='Cooperate Cooperate')
         results_df.to_excel(writer, sheet_name='Game Results')
 
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        tt_df.to_excel(writer, sheet_name='Defect Defect')
+        tnt_df.to_excel(writer, sheet_name='Defect Cooperate')
+        ntt_df.to_excel(writer, sheet_name='Cooperate Defect')
+        ntnt_df.to_excel(writer, sheet_name='Cooperate Cooperate')
+        results_df.to_excel(writer, sheet_name='Game Results')
+
     df = pd.read_excel('output.xlsx', sheet_name = 'Game Results')
 
     col1 = 'actionsPlayer1'
@@ -271,16 +279,7 @@ if st.button("Process"):
     plt.tight_layout()
     st.pyplot(plt)
 
-output = io.BytesIO()
-with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-    tt_df.to_excel(writer, sheet_name='Defect Defect')
-    tnt_df.to_excel(writer, sheet_name='Defect Cooperate')
-    ntt_df.to_excel(writer, sheet_name='Cooperate Defect')
-    ntnt_df.to_excel(writer, sheet_name='Cooperate Cooperate')
-    results_df.to_excel(writer, sheet_name='Game Results')
-    writer.save() 
 excel_data = output.getvalue()
-
 
 st.download_button(
     label="📥 Download Excel file",
